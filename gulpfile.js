@@ -35,7 +35,10 @@ gulp.task('static:dev', function() {
 
 // Bundles all client-side JS.
 gulp.task('webpack:dev', function() {
+  // return gulp.src(['app/js/plugins/sigma.min.js', 'app/js/plugins/sigma.parsers.json.js', 'app/js/plugins/sigma.parsers.cypher.js','app/js/entry.js',])
+  // return gulp.src(['app/js/plugins/sigma.min.js', 'app/js/entry.js'])
   return gulp.src('app/js/entry.js')
+
   .pipe(webpack({
     output: {
       filename: 'bundle.js'

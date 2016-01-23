@@ -44,6 +44,7 @@
     "karma-jasmine": "^0.3.6",
     "karma-phantomjs-launcher": "^0.2.3",
     "leaflet": "^0.7.7",
+    "linkurious": "^1.4.0",
     "mocha": "^2.3.4",
     "phantomjs": "^1.9.19",
     "sigma": "^1.0.3",
