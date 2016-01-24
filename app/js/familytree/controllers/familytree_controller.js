@@ -1,13 +1,41 @@
 module.exports = function(app) {
-  app.controller('FamilyTreeController', ['$scope', 'leafletData', '$http',
+  app.controller('FamilyTreeController',
+    ['$scope', 'leafletData', '$http',
     function($scope,leafletData, $http) {
 
+      // var dagre = require('dagre');
+      // console.log(typeof dagre);
+      // console.log(typeof dagre.graphlib);
+      // require('../../plugins/dagre.js');
       require('../../plugins/sigma.parsers.json.js');
       require('../../plugins/sigma.parsers.cypher.js');
       require('../../plugins/sigma.plugins.design.js');
+      require('../../plugins/sigma.layout.dagre.js');
+
 
       var settings = {
 
+      };
+
+      var treePalette = {
+      };
+
+      var treeStyles = {
+        nodes: {
+          label: {
+            by: 'neo4j_data.name',
+            format: function(value) { return 'Name: ' + value; }
+          },
+
+          size: {
+            by: 'neo4j_data.nodeType',
+            bins: 10,
+            min: 1,
+            max: 20
+          }
+
+
+        }
       };
 
       var s = new sigma({
@@ -26,41 +54,24 @@ module.exports = function(app) {
             console.log(s.graph.edges());
             // sigma.plugins.killDesign(s);
             var design = sigma.plugins.design(s);
-            console.log(design);
-            design.setStyles({
-              nodes: {
-                label: {
-                  by: 'neo4j_labels',
-                  format: function(value) { return 'Name: ' + value; }
-                }
-              }
+            // console.log(design);
+            // design.setPalette(treePalette);
+            design.setStyles(treeStyles);
+            design.apply();
+
+            var config = {
+              rankdir: 'TB'
+            };
+
+            var listener = sigma.layouts.dagre.configure(s, config);
+
+            listener.bind('start stop interpolate', function(event) {
+              console.log(event.type);
             });
 
-            // var newNodes = s.graph.nodes();
-            // var newEdges = s.graph.edges();
+            sigma.layouts.dagre.start(s);
 
-            design.apply();
             s.refresh();
-            // s.kill();
-
-            // console.log(s);
-            //
-            // var myGraph = new sigma.classes.graph();
-            //
-            // myGraph.read({
-            //   nodes: newNodes,
-            //   edges: newEdges
-            // });
-            // console.log('myGraph is: ');
-            // console.log(myGraph);
-            //
-            // console.log('instantiating new sigma');
-            // s = new sigma({
-            //   graph: myGraph,
-            //   container: 'graph-container'
-            // });
-            // console.log(s);
-            // console.log(s.graph.nodes());
 
           }
       );
@@ -69,37 +80,6 @@ module.exports = function(app) {
 
 
 
-      // // Let's first initialize sigma:
-      //     var s = new sigma('graph-container');
-      //
-      //     // Then, let's add some data to display:
-      //     s.graph.addNode({
-      //       // Main attributes:
-      //       id: 'n0',
-      //       label: 'Hello',
-      //       // Display attributes:
-      //       x: 0.5,
-      //       y: 0.5,
-      //       size: 1,
-      //       color: '#f00'
-      //     }).addNode({
-      //       // Main attributes:
-      //       id: 'n1',
-      //       label: 'World !',
-      //       // Display attributes:
-      //       x: 1,
-      //       y: 1,
-      //       size: 1,
-      //       color: '#00f'
-      //     }).addEdge({
-      //       id: 'e0',
-      //       // Reference extremities:
-      //       source: 'n0',
-      //       target: 'n1'
-      //     });
-      //
-      //     // Finally, let's ask our sigma instance to refresh:
-      //     s.refresh();
 
 
       angular.extend($scope, {

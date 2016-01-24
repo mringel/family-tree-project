@@ -1,5 +1,7 @@
 // require('./plugins/sigma.min.js');
 // require('linkurious');
+// var dagre = require('dagre');
+// require('dagre');
 require('angular/angular');
 require('leaflet');
 require('angular-simple-logger');
